@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>살껄팔껄</title>
+<style>
+:root{font-family:Inter,"Malgun Gothic",system-ui,sans-serif;color:#182422;background:#f4f6f4;--ink:#172b26;--green:#007653;--mint:#ddf8ea;--border:#e1e7e3;--muted:#53645c}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,canvas:focus-visible{outline:3px solid #00a37a;outline-offset:3px}button:disabled{opacity:.58;cursor:wait}[hidden]{display:none!important}
+.wrap{width:min(1120px,100% - 44px);margin:auto}header{background:#fff;border-bottom:1px solid var(--border)}.bar{height:66px;display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{display:flex;align-items:center;gap:10px;letter-spacing:-.065em;font-weight:900;font-size:21px}.logo{display:grid;place-items:center;color:#d0ffdd;background:#163d31;width:33px;height:33px;border-radius:9px;font-size:20px}.badge{background:var(--mint);color:#075f46;padding:6px 11px;border-radius:100px;font-size:12px;font-weight:800}
+main{padding:34px 0 28px}.hero{background:#17382e;color:#fff;border-radius:22px;padding:30px 34px;display:grid;grid-template-columns:1fr minmax(250px,390px);align-items:end;gap:25px}.hero h1{font-size:clamp(32px,5vw,52px);letter-spacing:-.095em;line-height:1.12;margin:0}.hero p{color:#cde3d7;margin:10px 0 0;font-size:14px;line-height:1.6}.search label{font-size:13px;color:#dcece5;font-weight:800}.search-row{display:flex;gap:6px;margin-top:7px}.search-row input{width:100%;min-width:0;background:#fff}.search-row button{background:#bcf4cc;color:#13372a;white-space:nowrap}button{border:0;border-radius:9px;padding:9px 13px;background:#edf3ef;color:#25463a;font-weight:800;font-size:13px}button[aria-pressed=true],.primary{background:#09694d;color:white}input{color:var(--ink);background:white;border:1px solid #cdd8d1;border-radius:9px;padding:9px 10px;min-width:0;font-size:14px}.search-results{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.search-results button{background:#f1f7f1}.search-results small{color:#4c675b;margin-left:5px}.message{margin:8px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}.hero .message{color:#e0f2e9}.file-note{margin:12px 0 0;padding:11px 14px;border-radius:10px;background:#fff5de;color:#654700;font-size:13px}
+.dashboard{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(300px,1fr);gap:14px;margin-top:15px;align-items:start}.card{background:#fff;border:1px solid var(--border);border-radius:18px;min-width:0;padding:21px}.head,.ticker-row,.line{display:flex;align-items:center;justify-content:space-between;gap:10px}.head{align-items:start}.head h2,.card h2{margin:0;font-size:19px;letter-spacing:-.06em}.ticker-row{justify-content:flex-start;flex-wrap:wrap}.ticker{font-size:12px;color:var(--muted);font-weight:700}.quote{font-size:23px;font-weight:850;white-space:nowrap;font-variant-numeric:tabular-nums}.price-asof{font-size:11px;text-align:right;color:var(--muted);margin-top:3px}.ranges,.modes{display:flex;flex-wrap:wrap;gap:4px;margin:16px 0 9px}.ranges button{padding:6px 10px}.modes{display:grid;grid-template-columns:1fr 1fr;margin-bottom:15px}.chart-area{position:relative}.chart-area canvas{display:block;width:100%;height:292px;touch-action:pan-y}.empty-chart{height:292px;display:grid;place-items:center;text-align:center;color:var(--muted);background:#f6f8f6;border-radius:11px;font-size:14px;padding:16px}.chart-note{font-size:12px;margin:9px 0 0;color:var(--muted);min-height:18px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.fields label{min-width:0;display:grid;gap:5px;font-size:12px;font-weight:750;color:#3c5549}.fields input{width:100%}.full{width:100%;margin-top:9px}.comparison{margin-top:15px;background:#edf7f1;border-radius:13px;padding:15px}.comparison.down{background:#fdf1ef}.comparison .result-label{font-size:12px;font-weight:800;color:#415a4e}.percent{font-size:clamp(30px,5vw,45px);line-height:1.12;letter-spacing:-.06em;font-weight:900;margin:4px 0;color:#007153;font-variant-numeric:tabular-nums}.down .percent{color:#ac3728}.line{font-size:13px;margin-top:9px;border-top:1px solid #dbe6df;padding-top:8px}.line span{color:var(--muted)}.details{font-size:12px;color:#465b50;margin:8px 0 0;line-height:1.5}.foot{font-size:12px;color:var(--muted);line-height:1.65;margin:14px 0 0}.foot a{color:#075f46}
+@media(max-width:780px){.dashboard{grid-template-columns:1fr}.hero{grid-template-columns:1fr;padding:24px}.wrap{width:calc(100% - 28px)}main{padding-top:18px}.card{padding:16px}}@media(max-width:375px){.fields{grid-template-columns:1fr}.quote{font-size:18px}}
+:root{color:#172a46;background:#f2f6fc;--ink:#172a46;--border:#dce6f4;--muted:#52637b}
+button,input,select,textarea{font:inherit}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,canvas:focus-visible{outline-color:#3979e2}
+.logo{color:#fff;background:#235ac5}.badge{background:#e4efff;color:#2152a2}.hero{background:#163870}.hero p,.search label,.hero .message{color:#e1ebfc}.search-row button{background:#dceaff;color:#183a73}
+button,.search-results button{background:#eaf1fc;color:#234778}button[aria-pressed=true],.primary{background:#205ac5;color:white}.search-results small,.fields label,.details,.comparison .result-label{color:#3d5578}
+input,select,textarea{border:1px solid #c7d5e9;color:var(--ink);background:#fff}.empty-chart{background:#f2f6fc}.comparison{background:#eaf2ff}.comparison.down{background:#fdf1ef}.percent,.foot a{color:#2056b3}.down .percent{color:#ac3728}.line{border-color:#d2e0f5}
+.journal{margin-top:14px}.journal h2{margin-bottom:4px}.journal-entry{padding:14px 0;border-top:1px solid var(--border);margin-top:12px}.journal-entry h3{font-size:16px;margin:0}.journal-meta{color:var(--muted);font-size:13px;margin:6px 0}.journal-note{margin:9px 0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.journal-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+dialog{width:min(480px,calc(100% - 28px));max-height:90vh;border:1px solid var(--border);border-radius:18px;color:var(--ink);padding:22px}dialog::backdrop{background:#10234b80}dialog h2{margin:0 0 10px;font-size:21px}.journal-form{display:grid;gap:12px}.journal-form label{display:grid;gap:5px;font-size:13px;font-weight:750}.journal-form select,.journal-form textarea{width:100%;border-radius:9px;padding:9px}.journal-form textarea{resize:vertical}.dialog-actions{display:flex;justify-content:flex-end;gap:6px}.delete{color:#a33027}
+</style>
+<header><div class="wrap bar"><div class="brand"><span class="logo" aria-hidden="true">↗</span> 살껄팔껄</div><span id="source-badge" class="badge">예시 데이터</span></div></header>
+<main class="wrap">
+  <section class="hero"><div><h1>그때 샀다면,<br>지금은 얼마일까?</h1><p>종목을 찾고 날짜를 입력하거나 차트에서 기준점을 선택하세요.</p></div>
+    <div><form class="search" id="search"><label for="query">종목명 또는 티커</label><div class="search-row"><input id="query" placeholder="삼성전자, 005930, AAPL" maxlength="80" required><button id="search-button">종목 검색</button></div></form><div id="matches" class="search-results"></div><p id="search-message" class="message" role="status"></p></div>
+  </section>
+  <p id="file-note" class="file-note" hidden>지금은 예시 데이터를 보고 있습니다. 실제 시세는 같은 폴더의 Start.cmd를 실행하면 조회할 수 있습니다.</p>
+  <div class="dashboard">
+    <section class="card" aria-labelledby="chart-title">
+      <div class="head"><div class="ticker-row"><h2 id="chart-title">주가 차트</h2><span id="symbol" class="ticker"></span></div><div><div class="quote" id="latest">—</div><div class="price-asof" id="latest-time"></div></div></div>
+      <div class="ranges" aria-label="차트 기간"><button type="button" data-range="30">1개월</button><button type="button" data-range="90">3개월</button><button type="button" data-range="365">1년</button><button type="button" data-range="1826">5년</button><button type="button" data-range="all">전체</button></div>
+      <div class="chart-area"><canvas id="chart" tabindex="0" aria-label="가격 차트. 왼쪽과 오른쪽 화살표로 기준 거래일을 선택할 수 있습니다."></canvas><div id="empty-chart" class="empty-chart" hidden>종목을 선택하면 가격 차트가 표시됩니다.</div></div>
+      <p id="chart-note" class="chart-note">차트를 누르거나 방향키로 거래일을 선택하세요.</p>
+    </section>
+    <section class="card" aria-labelledby="compare-title">
+      <h2 id="compare-title">수익률 비교</h2>
+      <div class="modes" aria-label="비교 상황"><button type="button" id="buy" aria-pressed="true">그때 샀다면</button><button type="button" id="hold" aria-pressed="false">그때 안 팔았다면</button></div>
+      <form id="compare"><div class="fields"><label>기준 날짜<input id="date" type="date" required></label><label>기준 시간 (선택)<input id="time" type="time"></label></div><p id="timezone" class="message"></p><button class="primary full" id="compare-button">시세 비교</button></form>
+      <p class="message" id="compare-message" role="status"></p>
+      <div id="comparison" class="comparison" aria-live="polite" hidden><div class="result-label" id="result-label"></div><div id="percent" class="percent"></div><div class="line"><span>기준 가격</span><strong id="base"></strong></div><div class="line"><span>최신 가격</span><strong id="end"></strong></div><p id="details" class="details"></p><button class="full" type="button" id="journal-add">판단 이유 기록</button></div>
+    </section>
+  </div>
+  <section class="card journal" aria-labelledby="journal-title"><h2 id="journal-title">매매 복기 노트</h2><p class="message">기록은 이 브라우저에 저장됩니다.</p><p class="message" id="journal-status" role="status"></p><div id="journal-list"></div></section>
+  <p class="foot">등락률은 기준 가격 대비 최신 가격의 변화입니다. 배당·수수료·세금·환율 변동은 계산에서 제외합니다. 시세는 거래소에 따라 지연될 수 있습니다. <a href="https://help.yahoo.com/kb/SLN2352.html" target="_blank" rel="noopener noreferrer">Yahoo Finance 시세 출처</a></p>
+</main>
+<dialog id="journal-dialog" aria-labelledby="journal-dialog-title">
+  <form id="journal-form" class="journal-form">
+    <div><h2 id="journal-dialog-title">판단 이유 기록</h2><p class="message" id="journal-context"></p></div>
+    <label>당시 결정<select id="journal-action"><option>매수</option><option>매도</option><option>매수 보류</option><option>계속 보유</option></select></label>
+    <label>당시 판단 이유<textarea id="journal-reason" rows="4" maxlength="2000" required placeholder="그때 어떤 근거로 결정했나요?"></textarea></label>
+    <label>복기 메모 (선택)<textarea id="journal-review" rows="3" maxlength="2000" placeholder="지금 돌아보면 어떤 점을 다시 확인하고 싶나요?"></textarea></label>
+    <p class="message" id="journal-error" role="status" hidden></p>
+    <div class="dialog-actions"><button type="button" id="journal-cancel">취소</button><button class="primary">저장</button></div>
+  </form>
+</dialog>
+<script>
+const id = name => document.getElementById(name);
+const live = location.protocol !== 'file:';
+const canvas = id('chart');
+const context = canvas.getContext('2d');
+const daySeconds = 86400;
+const ranges = [...document.querySelectorAll('[data-range]')];
+let series, visible = [], selected, plot, period = '90', mode = 'buy';
+let searchSequence = 0, chartSequence = 0, comparisonSequence = 0;
+let loadingSymbol = false;
+let currentSymbol;
+let hoverIndex = -1;
+
+const dateFormatters = new Map();
+function formatTime(seconds, timezone, withTime = false) {
+  const key = timezone + withTime;
+  if (!dateFormatters.has(key)) {
+    dateFormatters.set(key,new Intl.DateTimeFormat(withTime ? 'sv-SE' : 'en-CA', {
+      timeZone: timezone, year:'numeric', month:'2-digit', day:'2-digit',
+      ...(withTime ? {hour:'2-digit',minute:'2-digit',hourCycle:'h23'} : {})
+    }));
+  }
+  return dateFormatters.get(key).format(new Date(seconds * 1000));
+}
+function dayOf(seconds) { return formatTime(seconds,series.timezone); }
+function money(value) {
+  return new Intl.NumberFormat('ko-KR',{maximumFractionDigits:series.currency === 'KRW' ? 0 : 2})
+    .format(value) + ' ' + series.currency;
+}
+function demo() {
+  const anchor = new Date();
+  anchor.setUTCHours(6,30,0,0);
+  if (anchor.getTime() > Date.now()) anchor.setUTCDate(anchor.getUTCDate() - 1);
+  const points = [];
+  for (let back = 560; back >= 0; back--) {
+    const timestamp = anchor.getTime() / 1000 - back * daySeconds;
+    const weekday = new Date(timestamp * 1000).getUTCDay();
+    if (weekday === 0 || weekday === 6) continue;
+    const step = 560 - back;
+    const close = Math.round((38000 + step * 59 + 3500 * Math.sin(step / 21) + 1900 * Math.sin(step / 7) + 900 * Math.cos(step * 1.9)) / 100) * 100;
+    points.push([timestamp,close]);
+  }
+  const [latestTime,latest] = points.at(-1);
+  return {symbol:'DEMO',name:'예시 종목',timezone:'Asia/Seoul',currency:'KRW',latest,latestTime,points,demo:true};
+}
+async function api(path, params) {
+  const response = await fetch(path + '?' + new URLSearchParams(params), {signal:AbortSignal.timeout(18000)});
+  const json = await response.json();
+  if (!response.ok) throw new Error(json.error || '조회에 실패했습니다.');
+  return json;
+}
+function makeButton(text, action) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.textContent = text;
+  button.onclick = action;
+  return button;
+}
+function result() {
+  id('comparison').hidden = !selected;
+  if (!selected) return;
+  const change = (series.latest / selected.price - 1) * 100;
+  const rounded = Number(change.toFixed(2));
+  const direction = rounded > 0 ? '상승' : rounded < 0 ? '하락' : '보합';
+  id('comparison').classList.toggle('down',rounded < 0);
+  id('result-label').textContent = mode === 'buy' ? '그때 샀다면' : '그때 안 팔았다면';
+  id('percent').textContent = (rounded > 0 ? '+' : '') + rounded.toFixed(2) + '% ' + direction;
+  id('base').textContent = money(selected.price);
+  id('end').textContent = money(series.latest);
+  id('details').textContent = selected.detail;
+}
+function updateRange() {
+  const cutoff = series.points.at(-1)[0] - Number(period) * daySeconds;
+  visible = period === 'all' ? series.points : series.points.filter(([time]) => time >= cutoff);
+  ranges.forEach(button => button.setAttribute('aria-pressed',String(button.dataset.range === period)));
+  hoverIndex = -1;
+  draw();
+}
+function showSeries(data) {
+  series = data;
+  selected = undefined;
+  id('source-badge').textContent = data.demo ? '예시 데이터' : 'Yahoo Finance';
+  id('chart-title').textContent = data.name;
+  id('symbol').textContent = data.symbol;
+  id('latest').textContent = money(data.latest);
+  id('latest-time').textContent = '최신 시세 ' + formatTime(data.latestTime,data.timezone,true);
+  id('timezone').textContent = data.timezone + ' 현지 시간 · 비워 두면 일봉 종가';
+  id('date').max = dayOf(Date.now() / 1000);
+  id('date').min = dayOf(data.points[0][0]);
+  id('date').value = '';
+  id('time').value = '';
+  id('compare-message').textContent = '';
+  id('compare-button').disabled = false;
+  updateRange();
+  result();
+}
+function choose(point, requestedDate = '') {
+  comparisonSequence++;
+  const date = dayOf(point[0]);
+  selected = {
+    point:point[0],price:point[1],
+    detail:date + ' 일봉 종가' + (requestedDate && requestedDate !== date ? ' · ' + requestedDate + '에는 일봉이 없어 직전 거래일 적용' : '')
+  };
+  id('date').value = requestedDate || date;
+  id('time').value = '';
+  id('compare-button').disabled = false;
+  id('compare-message').textContent = '';
+  if (!visible.some(([timestamp]) => timestamp === point[0])) {
+    period = 'all';
+    updateRange();
+  }
+  result();
+  draw();
+}
+function draw() {
+  if (!visible.length) return;
+  const {width,height} = canvas.getBoundingClientRect();
+  if (!width || !height) return;
+  const scale = devicePixelRatio || 1;
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+  context.scale(scale,scale);
+  const left = 7, right = width - 64, top = 15, bottom = height - 27;
+  let min = Infinity, max = -Infinity;
+  for (const [,price] of visible) { min = Math.min(price,min); max = Math.max(price,max); }
+  const padding = (max - min || max * .05) * .12;
+  min -= padding;
+  max += padding;
+  const start = visible[0][0], duration = visible.at(-1)[0] - start || 1;
+  const x = timestamp => left + (right - left) * (timestamp - start) / duration;
+  const y = price => bottom - (bottom - top) * (price - min) / (max - min);
+  plot = { left,right,x };
+  context.font = '11px system-ui';
+  context.textBaseline = 'middle';
+  context.strokeStyle = '#e1e9f4';
+  context.fillStyle = '#536985';
+  for (let line = 0; line <= 4; line++) {
+    const value = min + (max - min) * line / 4;
+    const yy = y(value);
+    context.beginPath();
+    context.moveTo(left,yy);
+    context.lineTo(right,yy);
+    context.stroke();
+    context.fillText(Math.round(value).toLocaleString('ko-KR'),right + 7,yy);
+  }
+  for (const part of [0,.33,.66,1]) {
+    const label = dayOf(start + duration * part).slice(duration > 365 * daySeconds ? 0 : 5);
+    context.fillText(label,Math.min(right - context.measureText(label).width,x(start + duration * part)),height - 10);
+  }
+  context.beginPath();
+  for (let index = 0; index < visible.length; index++) {
+    const [time,price] = visible[index];
+    if (index === 0) context.moveTo(x(time),y(price));
+    else context.lineTo(x(time),y(price));
+  }
+  context.lineWidth = 2;
+  context.strokeStyle = '#2866cf';
+  context.stroke();
+  context.lineTo(x(visible.at(-1)[0]),bottom);
+  context.lineTo(x(visible[0][0]),bottom);
+  context.closePath();
+  const fill = context.createLinearGradient(0,top,0,bottom);
+  fill.addColorStop(0,'#619cf254');
+  fill.addColorStop(1,'#619cf208');
+  context.fillStyle = fill;
+  context.fill();
+  const marked = hoverIndex >= 0 ? visible[hoverIndex] : visible.find(([timestamp]) => timestamp === selected?.point);
+  if (marked) {
+    const [time,price] = marked;
+    context.beginPath();
+    context.lineWidth = 1;
+    context.strokeStyle = '#6885b3';
+    context.setLineDash([4,4]);
+    context.moveTo(x(time),top);
+    context.lineTo(x(time),bottom);
+    context.stroke();
+    context.setLineDash([]);
+    context.beginPath();
+    context.arc(x(time),y(price),5,0,Math.PI * 2);
+    context.fillStyle = '#205ac5';
+    context.fill();
+  }
+  id('chart-note').textContent = marked ? dayOf(marked[0]) + ' · ' + money(marked[1]) + ' · 일봉 종가'
+    : '차트를 누르거나 방향키로 거래일을 선택하세요.';
+}
+function nearest(offset) {
+  if (!plot) return -1;
+  const target = Math.max(plot.left,Math.min(plot.right,offset));
+  let low = 0, high = visible.length - 1;
+  while (low < high) {
+    const mid = (low + high) >> 1;
+    if (plot.x(visible[mid][0]) < target) low = mid + 1;
+    else high = mid;
+  }
+  return low > 0 && Math.abs(plot.x(visible[low - 1][0]) - target) < Math.abs(plot.x(visible[low][0]) - target)
+    ? low - 1 : low;
+}
+canvas.addEventListener('pointermove',event => {
+  const index = nearest(event.clientX - canvas.getBoundingClientRect().left);
+  if (hoverIndex !== index) { hoverIndex = index; draw(); }
+});
+canvas.addEventListener('pointerleave',() => { hoverIndex = -1; draw(); });
+canvas.addEventListener('click',event => {
+  if (loadingSymbol) return;
+  const point = visible[nearest(event.clientX - canvas.getBoundingClientRect().left)];
+  if (point) choose(point);
+});
+canvas.addEventListener('keydown',event => {
+  if (loadingSymbol || !visible.length || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+  event.preventDefault();
+  const index = visible.findIndex(([timestamp]) => timestamp === selected?.point);
+  const next = event.key === 'Home' ? 0 : event.key === 'End' ? visible.length - 1
+    : Math.max(0,Math.min(visible.length - 1,(index < 0 ? visible.length : index) + (event.key === 'ArrowLeft' ? -1 : 1)));
+  hoverIndex = -1;
+  choose(visible[next]);
+});
+new ResizeObserver(draw).observe(canvas);
+ranges.forEach(button => button.onclick = () => { period = button.dataset.range; updateRange(); });
+for (const value of ['buy','hold']) id(value).onclick = () => {
+  mode = value;
+  for (const name of ['buy','hold']) id(name).setAttribute('aria-pressed',String(mode === name));
+  result();
+};
+
+id('compare').onsubmit = async event => {
+  event.preventDefault();
+  if (loadingSymbol) return;
+  const date = id('date').value;
+  const time = id('time').value;
+  const request = ++comparisonSequence;
+  selected = undefined;
+  result();
+  draw();
+  id('compare-message').textContent = '';
+  if (!time) {
+    const point = series.points.findLast(([timestamp]) => dayOf(timestamp) <= date);
+    if (point) choose(point,date);
+    else id('compare-message').textContent = '이 날짜 이전에 조회 가능한 거래 기록이 없습니다.';
+    return;
+  }
+  if (series.demo) {
+    id('compare-message').textContent = '예시 데이터에는 5분봉이 없습니다. 시간을 비우면 일봉을 비교할 수 있습니다.';
+    return;
+  }
+  const age = (Date.parse(dayOf(Date.now() / 1000)) - Date.parse(date)) / 86400000;
+  if (age >= 59) {
+    id('compare-message').textContent = '5분봉은 최근 약 60일만 조회할 수 있습니다. 시간을 비우면 일봉 종가로 비교합니다.';
+    return;
+  }
+  id('compare-button').disabled = true;
+  id('compare-message').textContent = '해당 날짜의 5분봉을 조회 중입니다.';
+  try {
+    const data = await api('/api/chart',{symbol:currentSymbol,date});
+    if (request !== comparisonSequence) return;
+    const cutoff = date + ' ' + time;
+    const point = data.points.find(([timestamp]) => {
+      const open = formatTime(timestamp,series.timezone,true);
+      const close = formatTime(timestamp + 300,series.timezone,true);
+      return open <= cutoff && cutoff < close;
+    });
+    if (!point) throw new Error('해당 시각에 거래 기록이 없습니다. 장중 시간을 선택하거나 시간을 비워 주세요.');
+    const start = formatTime(point[0],series.timezone,true);
+    const end = formatTime(point[0] + 300,series.timezone,true);
+    const provisional = point[0] + 300 > Date.now() / 1000;
+    selected = { price:point[1],detail:start + '–' + end.slice(-5) + ' 5분봉 ' + (provisional ? '진행 중 가격' : '종가') };
+    id('compare-message').textContent = '';
+    result();
+  } catch (error) {
+    if (request === comparisonSequence) id('compare-message').textContent = error.message;
+  } finally {
+    if (request === comparisonSequence) id('compare-button').disabled = false;
+  }
+};
+for (const field of ['date','time']) id(field).addEventListener('input',() => {
+  comparisonSequence++;
+  selected = undefined;
+  id('compare-button').disabled = loadingSymbol;
+  id('compare-message').textContent = '';
+  result();
+  draw();
+});
+
+async function loadSymbol(item) {
+  const request = ++chartSequence;
+  comparisonSequence++;
+  loadingSymbol = true;
+  id('compare-button').disabled = true;
+  id('search-message').textContent = item.symbol + ' 시세를 불러오는 중입니다.';
+  try {
+    const data = await api('/api/chart',{symbol:item.symbol});
+    if (request !== chartSequence) return;
+    if (!data.points.length || !Number.isFinite(data.latest) || data.latest <= 0 || !Number.isFinite(data.latestTime))
+      throw new Error('비교에 필요한 과거 가격 또는 최신 가격이 없습니다.');
+    if (item.name !== item.symbol) data.name = item.name;
+    currentSymbol = item.symbol;
+    showSeries(data);
+    id('search-message').textContent = '';
+    id('matches').replaceChildren();
+  } catch (error) {
+    if (request === chartSequence) id('search-message').textContent = error.message;
+  } finally {
+    if (request === chartSequence) {
+      loadingSymbol = false;
+      id('compare-button').disabled = false;
+    }
+  }
+}
+id('search').onsubmit = async event => {
+  event.preventDefault();
+  if (!live) {
+    id('search-message').textContent = '실제 종목 검색은 Start.cmd로 실행한 앱에서 사용할 수 있습니다.';
+    return;
+  }
+  const query = id('query').value.trim();
+  if (!query) return;
+  const request = ++searchSequence;
+  if (loadingSymbol) {
+    chartSequence++;
+    loadingSymbol = false;
+    id('compare-button').disabled = false;
+  }
+  id('search-button').disabled = true;
+  id('matches').replaceChildren();
+  id('search-message').textContent = '종목 검색 중입니다.';
+  try {
+    const matches = await api('/api/search',{q:query});
+    if (request !== searchSequence) return;
+    if (matches.length === 1) { await loadSymbol(matches[0]); return; }
+    id('search-message').textContent = matches.length ? '비교할 종목을 선택하세요.' : '검색 결과가 없습니다. 종목 코드나 티커를 확인해 주세요.';
+    for (const item of matches) {
+      const label = item.name === item.symbol ? item.symbol : item.name + ' · ' + item.symbol;
+      id('matches').append(makeButton(label,() => loadSymbol(item)));
+    }
+  } catch (error) {
+    if (request === searchSequence) id('search-message').textContent = error.message;
+  } finally {
+    if (request === searchSequence) id('search-button').disabled = false;
+  }
+};
+const journalKey = 'stock-replay-journal-v1';
+const journalDialog = id('journal-dialog');
+let draft;
+
+function readJournal() {
+  const records = JSON.parse(localStorage.getItem(journalKey) || '[]');
+  if (!Array.isArray(records)) throw new Error('Invalid journal');
+  return records;
+}
+function writeJournal(update) {
+  try {
+    localStorage.setItem(journalKey,JSON.stringify(update(readJournal())));
+    return true;
+  } catch { return false; }
+}
+function journalText(tag,text,className) {
+  const node = document.createElement(tag);
+  node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+function renderJournal() {
+  const list = id('journal-list');
+  list.replaceChildren();
+  let records;
+  try { records = readJournal(); }
+  catch {
+    list.append(journalText('p','브라우저에 저장된 복기 기록을 읽을 수 없습니다.','message'));
+    return;
+  }
+  if (!records.length) list.append(journalText('p','비교 결과에서 판단 이유를 기록하면 여기에 표시됩니다.','message'));
+  for (const entry of records) {
+    const article = journalText('article','','journal-entry');
+    const heading = entry.name + ' · ' + entry.action + (entry.demo ? ' · 예시 데이터' : '');
+    article.append(journalText('h3',heading),
+      journalText('p',entry.detail,'journal-meta'),
+      journalText('p','저장 당시 비교  ' + entry.base + ' → ' + entry.latest + ' · ' + entry.change,'journal-meta'),
+      journalText('p','당시 판단 이유','journal-meta'),
+      journalText('p',entry.reason,'journal-note'));
+    if (entry.review) article.append(journalText('p','복기 메모','journal-meta'),journalText('p',entry.review,'journal-note'));
+    const actions = journalText('div','','journal-actions');
+    const edit = makeButton('기록 수정 · 복기',() => openJournal(entry));
+    const remove = makeButton('삭제',() => {
+      if (!window.confirm(heading + ' 기록을 삭제할까요?')) return;
+      const saved = writeJournal(items => items.filter(item => item.id !== entry.id));
+      id('journal-status').textContent = saved ? '기록을 삭제했습니다.' : '기록을 삭제할 수 없습니다.';
+      if (saved) renderJournal();
+    });
+    remove.className = 'delete';
+    actions.append(edit,remove);
+    article.append(actions);
+    list.append(article);
+  }
+}
+function openJournal(entry) {
+  draft = entry || {
+    id: globalThis.crypto?.randomUUID?.() ?? Date.now() + '-' + Math.random(),
+    name: series.name, demo: Boolean(series.demo), detail: selected.detail,
+    action: mode === 'hold' ? '매도' : '매수 보류',
+    base: money(selected.price), latest: money(series.latest), change: id('percent').textContent
+  };
+  id('journal-dialog-title').textContent = entry ? '기록 수정 · 복기' : '판단 이유 기록';
+  id('journal-context').textContent = draft.name + ' · ' + draft.detail + (draft.demo ? ' · 예시 데이터' : '');
+  id('journal-action').value = draft.action;
+  id('journal-reason').value = draft.reason || '';
+  id('journal-review').value = draft.review || '';
+  id('journal-error').hidden = true;
+  journalDialog.showModal();
+}
+id('journal-add').onclick = () => { if (selected) openJournal(); };
+id('journal-cancel').onclick = () => journalDialog.close();
+id('journal-form').onsubmit = event => {
+  event.preventDefault();
+  const reason = id('journal-reason').value.trim();
+  const error = id('journal-error');
+  if (!reason) {
+    error.textContent = '당시 판단 이유를 입력해 주세요.';
+    error.hidden = false;
+    id('journal-reason').focus();
+    return;
+  }
+  const entry = { ...draft, action:id('journal-action').value, reason, review:id('journal-review').value.trim() };
+  const saved = writeJournal(records => records.some(item => item.id === entry.id)
+    ? records.map(item => item.id === entry.id ? entry : item)
+    : [entry,...records]);
+  if (!saved) {
+    error.textContent = '기록을 저장할 수 없습니다. 브라우저 저장 공간을 확인해 주세요.';
+    error.hidden = false;
+    return;
+  }
+  journalDialog.close();
+  id('journal-status').textContent = '복기 노트에 저장했습니다.';
+  renderJournal();
+};
+window.addEventListener('storage',event => {
+  if (event.key === journalKey || event.key === null) renderJournal();
+});
+renderJournal();
+id('file-note').hidden = live;
+showSeries(demo());
+choose(visible[Math.floor(visible.length / 3)]);
+</script>
+</html>

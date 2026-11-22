@@ -1,0 +1,23 @@
+살껄팔껄 Netlify 배포
+
+1. 이 압축 파일을 풀고, netlify.toml과 package.json이 있는 폴더의 모든 파일을 GitHub 저장소에 올립니다.
+2. Netlify에서 Add new project → Import an existing project를 선택하고 해당 저장소를 연결합니다.
+3. Base directory는 저장소 루트, Build command는 빈칸, Publish directory는 public으로 설정합니다.
+4. Deploy를 실행합니다. netlify.toml의 설정에 따라 시세 조회 함수도 배포됩니다.
+5. 배포 주소에서 삼성전자 또는 AAPL을 검색하고, 날짜를 골라 비교합니다.
+
+터미널에서 직접 배포하려면
+netlify.toml이 있는 폴더에서 다음 명령을 실행합니다.
+npx netlify-cli deploy --prod
+Netlify 로그인과 프로젝트 선택 안내를 따릅니다.
+
+시세 조회에는 Netlify Functions가 필요하므로 Git 저장소 연결 또는 위 CLI 방식으로 배포하세요.
+정적 파일 드래그 앤 드롭 배포는 시세 조회 함수를 함께 빌드하지 않습니다.
+
+복기 기록은 현재 브라우저의 localStorage에 저장됩니다.
+PC에서 저장한 기록은 배포된 도메인에 자동으로 옮겨지지 않습니다.
+기기 간 기록 동기화는 제공하지 않습니다.
+
+시세는 Yahoo Finance 서버에서 조회합니다. 제공처의 지연, 접근 제한, 호출 제한에 따라 조회가 실패할 수 있습니다.
+시간 입력은 거래소 현지 시간을 사용하며 최근 약 60일의 5분봉으로 비교합니다.
+날짜만 입력하면 조회 가능한 직전 거래일의 일봉 종가를 사용합니다.
